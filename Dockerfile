@@ -1,17 +1,16 @@
-FROM node:12.18-buster-slim AS build
+FROM node:8.15-stretch-slim AS build
 
 RUN apt-get update && apt-get install -y git
 
-RUN git clone --branch 14.0.6 --depth 1  https://github.com/nightscout/cgm-remote-monitor.git /opt/app
+RUN git clone --branch 0.11.1 --depth 1  https://github.com/nightscout/cgm-remote-monitor.git /opt/app
 
 
-FROM node:12.18-buster-slim
+FROM node:8.15-stretch-slim
 
 COPY --from=build /opt/app /opt/app
 WORKDIR /opt/app
 
-RUN apt-get update && apt-get install -y python make build-essential && \
-  npm install && \
+RUN npm install && \
   npm run postinstall && \
   npm run env
 
